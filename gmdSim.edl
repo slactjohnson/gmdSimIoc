@@ -1,0 +1,621 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 395
+y 126
+w 910
+h 600
+font "helvetica-medium-r-14.0"
+ctlFont "helvetica-medium-r-14.0"
+ctlFontAlign "center"
+btnFont "helvetica-medium-r-18.0"
+btnFontAlign "center"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 15
+ctlFgColor2 index 25
+ctlBgColor1 index 12
+ctlBgColor2 index 5
+topShadowColor index 1
+botShadowColor index 13
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 463
+y 321
+w 429
+h 266
+lineColor index 14
+fillColor index 12
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 472
+y 355
+w 140
+h 158
+lineColor index 14
+fillColor index 12
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 321
+w 429
+h 266
+lineColor index 14
+fillColor index 12
+endObjectProperties
+
+# (X-Y Graph)
+object xyGraphClass
+beginObjectProperties
+major 4
+minor 8
+release 0
+# Geometry
+x 17
+y 15
+w 428
+h 274
+# Appearance
+border
+fgColor index 14
+bgColor index 12
+gridColor index 14
+font "helvetica-medium-r-14.0"
+# Operating Modes
+nPts 2
+# X axis properties
+showXAxis
+xAxisSrc "fromUser"
+xMin -100
+xMax 4200
+# Y axis properties
+showYAxis
+yAxisSrc "fromUser"
+yMin -5000
+yMax 33000
+# Y2 axis properties
+y2AxisSrc "AutoScale"
+y2Max 1
+# Trace Properties
+numTraces 1
+yPv {
+  0 "$(BASE):RAW_STREAM"
+}
+opMode {
+  0 "plot"
+}
+plotColor {
+  0 index 21
+}
+endObjectProperties
+
+# (X-Y Graph)
+object xyGraphClass
+beginObjectProperties
+major 4
+minor 8
+release 0
+# Geometry
+x 463
+y 16
+w 428
+h 274
+# Appearance
+border
+fgColor index 14
+bgColor index 12
+gridColor index 14
+font "helvetica-medium-r-14.0"
+# Operating Modes
+nPts 2
+# X axis properties
+showXAxis
+xAxisSrc "fromUser"
+xMin -100
+xMax 4200
+# Y axis properties
+showYAxis
+yAxisSrc "fromUser"
+yMin -5000
+yMax 33000
+# Y2 axis properties
+y2AxisSrc "AutoScale"
+y2Max 1
+# Trace Properties
+numTraces 1
+yPv {
+  0 "$(BASE):STREAM"
+}
+opMode {
+  0 "plot"
+}
+plotColor {
+  0 index 21
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 90
+y 293
+w 311
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Raw Input Signal (Before Amps/Attenuators)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 610
+y 294
+w 184
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Digitized + Processed Signal"
+}
+autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 25
+y 422
+w 133
+h 30
+fgColor index 14
+bgColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 13
+controlPv "$(BASE):AMP_PREATTN1"
+font "helvetica-medium-r-12.0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 165
+y 422
+w 133
+h 30
+fgColor index 14
+bgColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 13
+controlPv "$(BASE):AMP_POSATTN1"
+font "helvetica-medium-r-12.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 27
+y 399
+w 53
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Preatt. 1"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 165
+y 399
+w 56
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Posatt. 1"
+}
+autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 24
+y 486
+w 133
+h 30
+fgColor index 14
+bgColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 13
+controlPv "$(BASE):ENABLE_ATT_CONTROL"
+font "helvetica-medium-r-12.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 26
+y 460
+w 120
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Enable Att. Control"
+}
+autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 24
+y 548
+w 133
+h 30
+fgColor index 14
+bgColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 13
+controlPv "$(BASE):ENABLE_PEAK_SHARPEN"
+font "helvetica-medium-r-12.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 523
+w 141
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Enable Peak Sharpen."
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 306
+y 461
+w 111
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Att. Calc. Method"
+}
+autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 305
+y 486
+w 133
+h 30
+fgColor index 14
+bgColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 13
+controlPv "$(BASE):ATT_CALC_METHOD"
+font "helvetica-medium-r-12.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 165
+y 461
+w 130
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Peak Check Method"
+}
+autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 164
+y 486
+w 133
+h 30
+fgColor index 14
+bgColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 13
+controlPv "$(BASE):PEAK_CHECK_METHOD"
+font "helvetica-medium-r-12.0"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 7
+release 0
+x 99
+y 359
+w 108
+h 31
+controlPv "$(BASE):DATA_GAIN"
+format "float"
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+editable
+motifWidget
+precision 2
+nullColor index 25
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 27
+y 359
+w 57
+h 31
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Input"
+  "Gain V/V"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 20
+y 329
+w 144
+h 16
+font "helvetica-bold-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Processing Controls"
+}
+autoSize
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 7
+release 0
+x 481
+y 407
+w 108
+h 31
+controlPv "$(BASE):HIGH_VAL"
+format "float"
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+editable
+motifWidget
+precision 2
+nullColor index 25
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 7
+release 0
+x 481
+y 469
+w 108
+h 31
+controlPv "$(BASE):LOW_VAL"
+format "float"
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+editable
+motifWidget
+precision 2
+nullColor index 25
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 481
+y 388
+w 82
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "High Thresh."
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 481
+y 448
+w 79
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Low Thresh."
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 473
+y 333
+w 118
+h 16
+font "helvetica-bold-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Method Controls"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 478
+y 365
+w 131
+h 15
+font "helvetica-medium-i-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Threshold Detect."
+}
+endObjectProperties
+
