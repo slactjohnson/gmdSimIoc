@@ -4,7 +4,7 @@ major 4
 minor 0
 release 1
 x 395
-y 126
+y 156
 w 910
 h 600
 font "helvetica-medium-r-14.0"
@@ -617,5 +617,82 @@ useDisplayBg
 value {
   "Threshold Detect."
 }
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 620
+y 355
+w 140
+h 158
+lineColor index 14
+fillColor index 12
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 626
+y 365
+w 131
+h 15
+font "helvetica-medium-i-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Peak Sharpening"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 629
+y 388
+w 18
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "K2"
+}
+autoSize
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 7
+release 0
+x 629
+y 407
+w 108
+h 31
+controlPv "$(BASE):SHARPEN_K2"
+format "float"
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+editable
+motifWidget
+precision 2
+nullColor index 25
+useHexPrefix
+newPos
+objType "controls"
 endObjectProperties
 

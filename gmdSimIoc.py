@@ -9,7 +9,7 @@ from caproto import ChannelType
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run
 from caproto.server import template_arg_parser
 
-from utils import calc_attn_signal
+from algorithms import *
 
 att_strings = ['0db', '-3db', '-6db', '-9db',
                '-12db', '-15db', '-18db',
@@ -25,32 +25,32 @@ att_calc_strings = ['Up/Down by one']
 
 att_control_strings = ['Even Distribution']
 
-def ThreshDetect(high_val, low_val, signal):
-    if max(signal) > high_val:
-        return -1
-    elif max(signal) < low_val:
-        return 1
-    else:
-        return 0
+#def ThreshDetect(high_val, low_val, signal):
+#    if max(signal) > high_val:
+#        return -1
+#    elif max(signal) < low_val:
+#        return 1
+#    else:
+#        return 0
 
-def UpDownByOne(peak_status, current_att):
-    if peak_status == -1: # Too high
-        if current_att == 15:
-            return 15
-        else:
-            return current_att + 1
-    elif peak_status == 1: # Too low
-        if current_att == 0:
-            return 0
-        else:
-            return current_att - 1
-    else: # Juuuusssst right (or something bad happened)
-        return current_att 
-
-def EvenAttenuation(att_val):
-    preatt = int(att_val%2 + att_val/2)
-    posatt = int(att_val/2)
-    return preatt, posatt
+#def UpDownByOne(peak_status, current_att):
+#    if peak_status == -1: # Too high
+#        if current_att == 15:
+#            return 15
+#        else:
+#            return current_att + 1
+#    elif peak_status == 1: # Too low
+#        if current_att == 0:
+#            return 0
+#        else:
+#            return current_att - 1
+#    else: # Juuuusssst right (or something bad happened)
+#        return current_att 
+#
+#def EvenAttenuation(att_val):
+#    preatt = int(att_val%2 + att_val/2)
+#    posatt = int(att_val/2)
+#    return preatt, posatt
 
 class GmdSimIoc(PVGroup):
     """
@@ -77,29 +77,21 @@ class GmdSimIoc(PVGroup):
         await self.AMP_PREATTN1.write(att_strings[preatt_val])
         await self.AMP_POSATTN1.write(att_strings[posatt_val])
         
-    DATA_GAIN = pvproperty(value=1.0,
-                           record='ai')
+    DATA_GAIN = pvproperty(value=1.0, record='ai')
 
-    HIGH_VAL = pvproperty(value=30000,
-                          record='longin')
-    LOW_VAL = pvproperty(value=10000,
-                         record='longin')
+    HIGH_VAL = pvproperty(value=30000, record='longin')
+
+    LOW_VAL = pvproperty(value=10000, record='longin')
 
     AMP_PREATTN1 = pvproperty(value=att_strings[0],
                               enum_strings=att_strings,
                               record='mbbi',
                               dtype=ChannelType.ENUM)
-    #@AMP_PREATTN1.putter
-    #async def AMP_PREATTN1(self, instance, value):
-    #    await self.AMP_PREATTN1.write(value=value)
 
     AMP_POSATTN1 = pvproperty(value=att_strings[0],
                               enum_strings=att_strings,
                               record='mbbi',
                               dtype=ChannelType.ENUM)
-    #@AMP_POSATTN1.putter
-    #async def AMP_POSATTN1(self, instance, value):
-    #    await self.AMP_POSATTN1.write(value=value)
 
     ATT_CALC_METHOD = pvproperty(value=att_calc_strings[0],
                                  enum_strings=att_calc_strings,
@@ -120,6 +112,10 @@ class GmdSimIoc(PVGroup):
                                      enum_strings=bi_strings,
                                      record='bi',
                                      dtype=ChannelType.ENUM)
+
+    SHARPEN_K2 = pvproperty(value=19.5, record='ai')
+
+    SHARPEN_K4 = pvproperty(value=434, record='ai')
 
     RAW_STREAM = pvproperty(value=[0.0]*4096, record='waveform')
 
@@ -155,6 +151,9 @@ class GmdSimIoc(PVGroup):
                 new_att = self.current_att()
             preatt, posatt = EvenAttenuation(new_att)
             await self.write_att(preatt, posatt)
+        if bi_strings.index(self.ENABLE_PEAK_SHARPEN.value):
+            sig = PeakSharpen(sig, self.SHARPEN_K2.value)
+#                               self.SHARPEN_K4.value)
         ret = sig
         await instance.write(ret)
 
