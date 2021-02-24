@@ -28,7 +28,7 @@ A simple EDM screen is provided in the repository. This screen can be launched (
 ```
 
 ### Using your own data
-There are a few datafiles relevant to the (X)GMD that are provided in the repository, but you could use other data from (X)GMD experiments. There is a helper script included for creating files that can be read by the IOC using the LCLS psana system. To use this script you will need to be logged into an LCLS psana machine and have the LCLS-II psana environment. Example below:
+There are a few datafiles for testing provided in the repository, but you could use data from other (X)GMD experiments. There is a helper script included for creating files that can be read by the IOC using the LCLS psana system. To use this script you will need to be logged into an LCLS psana machine and have the LCLS-II psana environment. Example below:
 ```bash
 ssh psana
 source /cds/sw/ds/ana/conda2/manage/bin/psconda.sh
