@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 395
-y 156
+x 916
+y 118
 w 910
 h 600
 font "helvetica-medium-r-14.0"
@@ -442,7 +442,7 @@ controlPv "$(BASE):DATA_GAIN"
 format "float"
 font "helvetica-medium-r-14.0"
 fgColor index 14
-bgColor index 12
+bgColor index 7
 editable
 motifWidget
 precision 2
@@ -506,7 +506,7 @@ controlPv "$(BASE):HIGH_VAL"
 format "float"
 font "helvetica-medium-r-14.0"
 fgColor index 14
-bgColor index 12
+bgColor index 7
 editable
 motifWidget
 precision 2
@@ -530,7 +530,7 @@ controlPv "$(BASE):LOW_VAL"
 format "float"
 font "helvetica-medium-r-14.0"
 fgColor index 14
-bgColor index 12
+bgColor index 7
 editable
 motifWidget
 precision 2
@@ -686,7 +686,7 @@ controlPv "$(BASE):SHARPEN_K2"
 format "float"
 font "helvetica-medium-r-14.0"
 fgColor index 14
-bgColor index 12
+bgColor index 7
 editable
 motifWidget
 precision 2
