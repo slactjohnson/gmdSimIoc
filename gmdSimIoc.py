@@ -4,6 +4,7 @@ import os
 import sys
 import itertools
 import csv
+import random
 
 from caproto import ChannelType
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run
@@ -79,6 +80,8 @@ class GmdSimIoc(PVGroup):
         
     DATA_GAIN = pvproperty(value=1.0, record='ai')
 
+    SIM_BEAM_RATE = pvproperty(value=120.0, record='ai')
+
     HIGH_VAL = pvproperty(value=30000, record='longin')
 
     LOW_VAL = pvproperty(value=10000, record='longin')
@@ -119,20 +122,43 @@ class GmdSimIoc(PVGroup):
 
     RAW_STREAM = pvproperty(value=[0.0]*4096, record='waveform')
 
+    SIG_TOO_HIGH = pvproperty(value=0, record='bo')
+
+    @SIG_TOO_HIGH.scan(period=.2, use_scan_field=True)
+    async def SIG_TOO_HIGH(self, instance, async_lib):
+        sig = self.STREAM.value
+        if max(sig) > self.HIGH_VAL.value:
+            await instance.write(1)
+        else:
+            await instance.write(0)
+
+    SIG_TOO_LOW = pvproperty(value=0, record='bo')
+
+    @SIG_TOO_LOW.scan(period=.2, use_scan_field=True)
+    async def SIG_TOO_LOW(self, instance, async_lib):
+        sig = self.STREAM.value
+        if max(sig) < self.LOW_VAL.value:
+            await instance.write(1)
+        else:
+            await instance.write(0)
+
     @RAW_STREAM.scan(period=.2, use_scan_field=True)
     async def RAW_STREAM(self, instance, async_lib):
-        raw = next(self.data_iterator)
-        ret = [int(val)*self.DATA_GAIN.value for val in raw]
+        if self.SIM_BEAM_RATE.value > 0.0:
+            raw = next(self.data_iterator)
+            ret = [int(val)*self.DATA_GAIN.value for val in raw]
+        else: # Bad beam rate
+            ret = [random.random() * 100 for i in range(4096)]
         await instance.write(ret)
     
     STREAM = pvproperty(value=[0.0]*4096, record='waveform')
 
     @STREAM.scan(period=.2, use_scan_field=True)
     async def STREAM(self, instance, async_lib):
-        raw = self.RAW_STREAM.value
         # In reality the signal will be attenuated prior to hitting the ADC,
         # so get our fake attenuated signal before applying signal processing
         # algorithms
+        raw = self.RAW_STREAM.value
         att1 = att_strings.index(self.AMP_PREATTN1.value)
         att2 = att_strings.index(self.AMP_POSATTN1.value)
         sig = calc_attn_signal(raw, att1, att2)
@@ -141,21 +167,24 @@ class GmdSimIoc(PVGroup):
             sig = PeakSharpen(sig, self.SHARPEN_K2.value)
 #                               self.SHARPEN_K4.value)
         ### Automated attenuation control
-        if bi_strings.index(self.ENABLE_ATT_CONTROL.value):
-            if self.PEAK_CHECK_METHOD.value == peak_check_strings[0]:
-                peak_status = ThreshDetect(self.HIGH_VAL.value,
-                                           self.LOW_VAL.value,
-                                           sig)
-            else: # no other methods supported right now
-                peak_status = 0
-            # Calculate new attenuator state using selected method
-            if self.ATT_CALC_METHOD.value == att_calc_strings[0]:
-                curr_att = self.current_att()
-                new_att = UpDownByOne(peak_status, curr_att)
-            else: # No other calculation methods supported right now
-                new_att = self.current_att()
-            preatt, posatt = EvenAttenuation(new_att)
-            await self.write_att(preatt, posatt)
+        if self.SIM_BEAM_RATE.value > 0.0:
+            if bi_strings.index(self.ENABLE_ATT_CONTROL.value):
+                if self.PEAK_CHECK_METHOD.value == peak_check_strings[0]:
+                    peak_status = ThreshDetect(self.HIGH_VAL.value,
+                                               self.LOW_VAL.value,
+                                               sig)
+                else: # no other methods supported right now
+                    peak_status = 0
+                # Calculate new attenuator state using selected method
+                if self.ATT_CALC_METHOD.value == att_calc_strings[0]:
+                    curr_att = self.current_att()
+                    new_att = UpDownByOne(peak_status, curr_att)
+                else: # No other calculation methods supported right now
+                    new_att = self.current_att()
+                preatt, posatt = EvenAttenuation(new_att)
+                await self.write_att(preatt, posatt)
+        else:  # beam is missing, don't adjust attenuation
+            pass
         ret = sig
         await instance.write(ret)
 
