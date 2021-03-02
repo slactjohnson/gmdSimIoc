@@ -113,7 +113,7 @@ class GmdSimIoc(PVGroup):
                                      record='bi',
                                      dtype=ChannelType.ENUM)
 
-    SHARPEN_K2 = pvproperty(value=19.5, record='ai')
+    SHARPEN_K2 = pvproperty(value=5.0, record='ai')
 
     SHARPEN_K4 = pvproperty(value=434, record='ai')
 
