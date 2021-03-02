@@ -146,7 +146,7 @@ class GmdSimIoc(PVGroup):
     async def RAW_STREAM(self, instance, async_lib):
         if self.SIM_BEAM_RATE.value > 0.0:
             raw = next(self.data_iterator)
-            ret = [int(val)*self.DATA_GAIN.value for val in raw]
+            ret = [int(val)*self.DATA_GAIN.value if int(val)*self.DATA_GAIN.value < 2**16 else 2**16 for val in raw]
         else: # Bad beam rate
             ret = [random.random() * 100 for i in range(4096)]
         await instance.write(ret)
