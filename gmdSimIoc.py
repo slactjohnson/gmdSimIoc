@@ -136,24 +136,26 @@ class GmdSimIoc(PVGroup):
         att1 = att_strings.index(self.AMP_PREATTN1.value)
         att2 = att_strings.index(self.AMP_POSATTN1.value)
         sig = calc_attn_signal(raw, att1, att2)
+        ### Peak Sharpening
+        if bi_strings.index(self.ENABLE_PEAK_SHARPEN.value):
+            sig = PeakSharpen(sig, self.SHARPEN_K2.value)
+#                               self.SHARPEN_K4.value)
+        ### Automated attenuation control
         if bi_strings.index(self.ENABLE_ATT_CONTROL.value):
-            # Figure out if we're high or low based on selected method
             if self.PEAK_CHECK_METHOD.value == peak_check_strings[0]:
                 peak_status = ThreshDetect(self.HIGH_VAL.value,
-                                           self.LOW_VAL.value, sig)
+                                           self.LOW_VAL.value,
+                                           sig)
             else: # no other methods supported right now
                 peak_status = 0
             # Calculate new attenuator state using selected method
             if self.ATT_CALC_METHOD.value == att_calc_strings[0]:
                 curr_att = self.current_att()
                 new_att = UpDownByOne(peak_status, curr_att)
-            else: # no other calculation methods supported right now
+            else: # No other calculation methods supported right now
                 new_att = self.current_att()
             preatt, posatt = EvenAttenuation(new_att)
             await self.write_att(preatt, posatt)
-        if bi_strings.index(self.ENABLE_PEAK_SHARPEN.value):
-            sig = PeakSharpen(sig, self.SHARPEN_K2.value)
-#                               self.SHARPEN_K4.value)
         ret = sig
         await instance.write(ret)
 
