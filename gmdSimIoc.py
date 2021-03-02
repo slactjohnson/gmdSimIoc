@@ -22,36 +22,7 @@ bi_strings = ['No', 'Yes']
 
 peak_check_strings = ['Threshold Detec.']
 
-att_calc_strings = ['Up/Down by one']
-
-att_control_strings = ['Even Distribution']
-
-#def ThreshDetect(high_val, low_val, signal):
-#    if max(signal) > high_val:
-#        return -1
-#    elif max(signal) < low_val:
-#        return 1
-#    else:
-#        return 0
-
-#def UpDownByOne(peak_status, current_att):
-#    if peak_status == -1: # Too high
-#        if current_att == 15:
-#            return 15
-#        else:
-#            return current_att + 1
-#    elif peak_status == 1: # Too low
-#        if current_att == 0:
-#            return 0
-#        else:
-#            return current_att - 1
-#    else: # Juuuusssst right (or something bad happened)
-#        return current_att 
-#
-#def EvenAttenuation(att_val):
-#    preatt = int(att_val%2 + att_val/2)
-#    posatt = int(att_val/2)
-#    return preatt, posatt
+att_ctl_strings = ['Even Distribution', 'Favor Post Att.']
 
 class GmdSimIoc(PVGroup):
     """
@@ -86,6 +57,18 @@ class GmdSimIoc(PVGroup):
 
     LOW_VAL = pvproperty(value=10000, record='longin')
 
+    N_PLATEAU = pvproperty(value=3, record='longin')
+
+    PLATEAU_DETECTED = pvproperty(value=0, record='bo')
+
+    @PLATEAU_DETECTED.scan(period=.2, use_scan_field=True)
+    async def PLATEAU_DETECTED(self, instance, async_lib):
+        sig = self.STREAM.value
+        if PlateauDetect(self.N_PLATEAU.value, sig):
+            await instance.write(1)
+        else:
+            await instance.write(0)
+
     AMP_PREATTN1 = pvproperty(value=att_strings[0],
                               enum_strings=att_strings,
                               record='mbbi',
@@ -96,8 +79,8 @@ class GmdSimIoc(PVGroup):
                               record='mbbi',
                               dtype=ChannelType.ENUM)
 
-    ATT_CALC_METHOD = pvproperty(value=att_calc_strings[0],
-                                 enum_strings=att_calc_strings,
+    ATT_CTL_METHOD = pvproperty(value=att_ctl_strings[0],
+                                 enum_strings=att_ctl_strings,
                                  record='mbbi',
                                  dtype=ChannelType.ENUM) 
 
@@ -146,7 +129,7 @@ class GmdSimIoc(PVGroup):
     async def RAW_STREAM(self, instance, async_lib):
         if self.SIM_BEAM_RATE.value > 0.0:
             raw = next(self.data_iterator)
-            ret = [int(val)*self.DATA_GAIN.value if int(val)*self.DATA_GAIN.value < 2**16 else 2**16 for val in raw]
+            ret = [int(val)*self.DATA_GAIN.value for val in raw]
         else: # Bad beam rate
             ret = [random.random() * 100 for i in range(4096)]
         await instance.write(ret)
@@ -176,16 +159,22 @@ class GmdSimIoc(PVGroup):
                 else: # no other methods supported right now
                     peak_status = 0
                 # Calculate new attenuator state using selected method
-                if self.ATT_CALC_METHOD.value == att_calc_strings[0]:
-                    curr_att = self.current_att()
-                    new_att = UpDownByOne(peak_status, curr_att)
+                curr_att = self.current_att()
+                new_att = UpDownByOne(peak_status, curr_att)
+                if self.ATT_CTL_METHOD.value == att_ctl_strings[0]:
+                    preatt, posatt = EvenAttenuation(new_att)
+                elif self.ATT_CTL_METHOD.value == att_ctl_strings[1]:
+                    preatt = att_strings.index(self.AMP_PREATTN1.value) 
+                    posatt = att_strings.index(self.AMP_POSATTN1.value) 
+                    pd = self.PLATEAU_DETECTED.value
+                    preatt, posatt = FavorPost(preatt, posatt, peak_status, pd)
                 else: # No other calculation methods supported right now
-                    new_att = self.current_att()
-                preatt, posatt = EvenAttenuation(new_att)
+                    preatt = att_strings.index(self.AMP_PREATTN1.value) 
+                    posatt = att_strings.index(self.AMP_POSATTN1.value) 
                 await self.write_att(preatt, posatt)
         else:  # beam is missing, don't adjust attenuation
             pass
-        ret = sig
+        ret = [val if val < 2**15 else 2**15 for val in sig]
         await instance.write(ret)
 
 

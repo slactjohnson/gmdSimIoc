@@ -37,6 +37,17 @@ def ThreshDetect(high_val, low_val, signal):
     else:
         return 0
 
+def PlateauDetect(n_plateau, signal):
+    n_detected = 0
+    for i in range(n_plateau, len(signal)):
+        if signal[i-1] == signal[i]:
+            n_detected += 1
+        else:
+            n_detected = 0
+        if n_detected >= n_plateau:
+            return 1
+    return 0
+
 def UpDownByOne(peak_status, current_att):
     if peak_status == -1: # Too high
         if current_att == 15:
@@ -54,6 +65,37 @@ def UpDownByOne(peak_status, current_att):
 def EvenAttenuation(att_val):
     preatt = int(att_val%2 + att_val/2)
     posatt = int(att_val/2)
+    return preatt, posatt
+
+def FavorPost(preatt, posatt, peak_status, pd):
+    if peak_status == -1: # Too high
+        if pd: # There is a plateau
+            if preatt < 15:
+                return preatt+1, posatt
+            elif posatt < 15:
+                return preatt, posatt+1
+        else:
+            if posatt < 15:
+                return preatt, posatt+1
+            elif preatt < 15:
+                return preatt+1, posatt
+    elif peak_status == 1: # Too low
+        if pd: # There is a plateau. Will this happen? Try to lower post by 2, 
+               # increase pre by 1
+            if preatt < 15:
+                if posatt > 1:
+                    return preatt+1, posatt-2
+                elif preatt > 0:
+                    return preatt-1, posatt
+            elif preatt > 0:
+                return preatt-1, posatt
+            elif posatt > 0:
+                return preatt, posatt-1
+        else:
+            if preatt > 0:
+                return preatt-1, posatt
+            elif posatt > 0:
+                return preatt, posatt-1
     return preatt, posatt
 
 #def PeakSharpen(signal, k2, k4):

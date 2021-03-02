@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 155
-y 295
+x 425
+y 266
 w 910
 h 600
 font "helvetica-medium-r-14.0"
@@ -29,10 +29,10 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 763
-y 355
-w 125
-h 158
+x 15
+y 321
+w 429
+h 266
 lineColor index 14
 fillColor index 12
 endObjectProperties
@@ -43,10 +43,39 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 15
-y 321
-w 429
-h 266
+x 619
+y 454
+w 140
+h 91
+lineColor index 14
+fillColor index 12
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 339
+y 369
+w 24
+h 24
+lineColor index 14
+fill
+fillColor index 12
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 763
+y 355
+w 125
+h 158
 lineColor index 14
 fillColor index 12
 endObjectProperties
@@ -215,7 +244,7 @@ release 1
 x 610
 y 294
 w 184
-h 17
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -272,8 +301,8 @@ minor 1
 release 1
 x 27
 y 399
-w 55
-h 17
+w 53
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -292,8 +321,8 @@ minor 1
 release 1
 x 165
 y 399
-w 57
-h 17
+w 56
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -331,8 +360,8 @@ minor 1
 release 1
 x 26
 y 460
-w 122
-h 17
+w 120
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -370,8 +399,8 @@ minor 1
 release 1
 x 25
 y 523
-w 145
-h 17
+w 141
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -390,14 +419,14 @@ minor 1
 release 1
 x 306
 y 461
-w 111
-h 17
+w 99
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
 useDisplayBg
 value {
-  "Att. Calc. Method"
+  "Att. Ctl. Method"
 }
 autoSize
 endObjectProperties
@@ -417,7 +446,7 @@ bgColor index 5
 inconsistentColor index 5
 topShadowColor index 1
 botShadowColor index 13
-controlPv "$(BASE):ATT_CALC_METHOD"
+controlPv "$(BASE):ATT_CTL_METHOD"
 font "helvetica-medium-r-12.0"
 endObjectProperties
 
@@ -430,7 +459,7 @@ release 1
 x 165
 y 461
 w 130
-h 17
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -513,7 +542,7 @@ release 1
 x 20
 y 329
 w 144
-h 18
+h 16
 font "helvetica-bold-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -580,8 +609,8 @@ minor 1
 release 1
 x 481
 y 388
-w 83
-h 17
+w 82
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -600,8 +629,8 @@ minor 1
 release 1
 x 481
 y 448
-w 80
-h 17
+w 79
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -620,8 +649,8 @@ minor 1
 release 1
 x 473
 y 333
-w 117
-h 18
+w 118
+h 16
 font "helvetica-bold-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -660,7 +689,7 @@ release 0
 x 620
 y 355
 w 140
-h 158
+h 91
 lineColor index 14
 fillColor index 12
 endObjectProperties
@@ -693,7 +722,7 @@ release 1
 x 629
 y 388
 w 18
-h 17
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -769,8 +798,8 @@ minor 1
 release 1
 x 243
 y 340
-w 56
-h 17
+w 55
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -789,8 +818,8 @@ minor 1
 release 1
 x 369
 y 341
-w 59
-h 17
+w 58
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -827,8 +856,8 @@ minor 1
 release 1
 x 770
 y 388
-w 106
-h 17
+w 99
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 12
@@ -880,5 +909,106 @@ useDisplayBg
 value {
   "Ext. Conditions"
 }
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 339
+y 369
+w 24
+h 24
+lineColor index 14
+fill
+fillColor index 23
+visPv "$(BASE):PLATEAU_DETECTED"
+visMin "1"
+visMax "2"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 372
+y 375
+w 48
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Plateau"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 628
+y 487
+w 54
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "N Points"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 625
+y 464
+w 131
+h 15
+font "helvetica-medium-i-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Plateau Detection"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 7
+release 0
+x 628
+y 506
+w 108
+h 31
+controlPv "$(BASE):N_PLATEAU"
+format "float"
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 7
+editable
+motifWidget
+precision 2
+nullColor index 25
+useHexPrefix
+newPos
+objType "controls"
 endObjectProperties
 
