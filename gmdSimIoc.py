@@ -12,11 +12,9 @@ from caproto.server import template_arg_parser
 
 from algorithms import *
 
-att_strings = ['0db', '-3db', '-6db', '-9db',
-               '-12db', '-15db', '-18db',
-               '-21db', '-24db', '-27db',
-               '-30db', '-33db', '-36db',
-               '-39db', '-42db', '-45db']    
+att_strings = ['-45db', '-42db', '-39db', '-36db', '-33db', '-30db', '-27db',
+               '-24db', '-21db', '-18db', '-15db', '-12db', '-9db', '-6db', 
+               '-3db', '-0db']    
 
 bi_strings = ['No', 'Yes']
 
@@ -69,12 +67,12 @@ class GmdSimIoc(PVGroup):
         else:
             await instance.write(0)
 
-    AMP_PREATTN1 = pvproperty(value=att_strings[0],
+    AMP_PREATTN1 = pvproperty(value=att_strings[15],
                               enum_strings=att_strings,
                               record='mbbi',
                               dtype=ChannelType.ENUM)
 
-    AMP_POSATTN1 = pvproperty(value=att_strings[0],
+    AMP_POSATTN1 = pvproperty(value=att_strings[15],
                               enum_strings=att_strings,
                               record='mbbi',
                               dtype=ChannelType.ENUM)

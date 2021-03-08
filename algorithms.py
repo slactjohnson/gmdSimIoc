@@ -13,16 +13,16 @@ def calc_attn_signal(signal, attn1, attn2):
 
     attn1 : int
         Attnuator 1 setting as an interger multiple of -3dB. Ranges from
-        0 dB (attn1=0) to -45 dB (attn1=15).
+        0 dB (attn1=15) to -45 dB (attn1=0).
 
     attn2 : int
         Attnuator 2 setting as an interger multiple of -3dB. Ranges from
-        0 dB (attn2=0) to -45 dB (attn2=15).
+        0 dB (attn2=15) to -45 dB (attn2=0).
     """
     assert 0 <= attn1 < 16
     assert 0 <= attn2 < 16
 
-    total_db = -3*(attn1+attn2)
+    total_db = -90+3*(attn1+attn2)
 
     out = [float(val)*10**(total_db/20) for val in signal]
 
@@ -49,53 +49,53 @@ def PlateauDetect(n_plateau, signal):
     return 0
 
 def UpDownByOne(peak_status, current_att):
-    if peak_status == -1: # Too high
-        if current_att == 15:
-            return 15
-        else:
-            return current_att + 1
-    elif peak_status == 1: # Too low
+    if peak_status == -1: # Signal too high
         if current_att == 0:
             return 0
         else:
             return current_att - 1
+    elif peak_status == 1: # Signal too low
+        if current_att == 15:
+            return 15
+        else:
+            return current_att + 1
     else: # Juuuusssst right (or something bad happened)
         return current_att
 
 def EvenAttenuation(att_val):
-    preatt = int(att_val%2 + att_val/2)
-    posatt = int(att_val/2)
+    preatt = int(att_val/2)
+    posatt = int(att_val%2 + att_val/2)
     return preatt, posatt
 
 def FavorPost(preatt, posatt, peak_status, pd):
     if peak_status == -1: # Too high
         if pd: # There is a plateau
-            if preatt < 15:
-                return preatt+1, posatt
-            elif posatt < 15:
-                return preatt, posatt+1
-        else:
-            if posatt < 15:
-                return preatt, posatt+1
-            elif preatt < 15:
-                return preatt+1, posatt
-    elif peak_status == 1: # Too low
-        if pd: # There is a plateau. Will this happen? Try to lower post by 2, 
-               # increase pre by 1
-            if preatt < 15:
-                if posatt > 1:
-                    return preatt+1, posatt-2
-                elif preatt > 0:
-                    return preatt-1, posatt
-            elif preatt > 0:
-                return preatt-1, posatt
-            elif posatt > 0:
-                return preatt, posatt-1
-        else:
             if preatt > 0:
                 return preatt-1, posatt
             elif posatt > 0:
                 return preatt, posatt-1
+        else:
+            if posatt > 0:
+                return preatt, posatt-1
+            elif preatt > 0:
+                return preatt-1, posatt
+    elif peak_status == 1: # Too low
+        if pd: # There is a plateau. Will this happen? Try to lower post by
+               # 6db, increase pre by 3db, total 3db less attenuation
+            if preatt > 0:
+                if posatt < 14:
+                    return preatt-1, posatt+2
+                elif preatt < 15:
+                    return preatt+1, posatt
+            elif preatt < 15:
+                return preatt+1, posatt
+            elif posatt < 15:
+                return preatt, posatt+1
+        else:
+            if preatt < 15:
+                return preatt+1, posatt
+            elif posatt < 15:
+                return preatt, posatt+1
     return preatt, posatt
 
 #def PeakSharpen(signal, k2, k4):
