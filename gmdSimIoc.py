@@ -51,9 +51,25 @@ class GmdSimIoc(PVGroup):
 
     SIM_BEAM_RATE = pvproperty(value=120.0, record='ai')
 
+    MIN_THRESH_DIFF = pvproperty(value=10000, record='longin')
+
     HIGH_VAL = pvproperty(value=30000, record='longin')
 
+    @HIGH_VAL.putter
+    async def HIGH_VAL(self, instance, value):
+        if value < self.LOW_VAL.value + self.MIN_THRESH_DIFF.value:
+            return self.LOW_VAL.value + self.MIN_THRESH_DIFF.value
+        else:
+            return value
+
     LOW_VAL = pvproperty(value=10000, record='longin')
+
+    @LOW_VAL.putter
+    async def LOW_VAL(self, instance, value):
+        if value > self.HIGH_VAL.value - self.MIN_THRESH_DIFF.value:
+            return self.HIGH_VAL.value - self.MIN_THRESH_DIFF.value
+        else:
+            return value
 
     N_PLATEAU = pvproperty(value=3, record='longin')
 

@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 425
-y 266
+x 144
+y 233
 w 910
 h 600
 font "helvetica-medium-r-14.0"
@@ -121,7 +121,7 @@ release 0
 x 472
 y 355
 w 140
-h 158
+h 207
 lineColor index 14
 fillColor index 12
 endObjectProperties
@@ -999,6 +999,50 @@ y 506
 w 108
 h 31
 controlPv "$(BASE):N_PLATEAU"
+format "float"
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 7
+editable
+motifWidget
+precision 2
+nullColor index 25
+useHexPrefix
+newPos
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 481
+y 507
+w 53
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 12
+useDisplayBg
+value {
+  "Min. Diff."
+}
+autoSize
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 7
+release 0
+x 481
+y 528
+w 108
+h 31
+controlPv "$(BASE):MIN_THRESH_DIFF"
 format "float"
 font "helvetica-medium-r-14.0"
 fgColor index 14
