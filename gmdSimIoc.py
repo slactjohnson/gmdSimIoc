@@ -22,10 +22,10 @@ peak_check_strings = ['Threshold Detec.']
 
 att_ctl_strings = ['Even Distribution', 'Favor Post Att.']
 
-class GmdSimIoc(PVGroup):
+class GmdSimIocBase(PVGroup):
     """
-    IOC for simulating the GMD ion/electron currents. Reads in arrays of 
-    previously taken data and loops through them. 
+    Simple IOC for simulating the GMD ion/electron currents. Reads in arrays of 
+    previously taken data and loops through them.
     """
     def __init__(self, *args, datafile, **kwargs):
         #self.datafile = datafile
@@ -46,8 +46,18 @@ class GmdSimIoc(PVGroup):
     async def write_att(self, preatt_val, posatt_val):
         await self.AMP_PREATTN1.write(att_strings[preatt_val])
         await self.AMP_POSATTN1.write(att_strings[posatt_val])
-        
+
     DATA_GAIN = pvproperty(value=1.0, record='ai')
+
+    AMP_PREATTN1 = pvproperty(value=att_strings[15],
+                              enum_strings=att_strings,
+                              record='mbbi',
+                              dtype=ChannelType.ENUM)
+
+    AMP_POSATTN1 = pvproperty(value=att_strings[15],
+                              enum_strings=att_strings,
+                              record='mbbi',
+                              dtype=ChannelType.ENUM)
 
     SIM_BEAM_RATE = pvproperty(value=120.0, record='ai')
 
@@ -71,6 +81,35 @@ class GmdSimIoc(PVGroup):
         else:
             return value
 
+    RAW_STREAM = pvproperty(value=[0.0]*4096, record='waveform')
+
+    @RAW_STREAM.scan(period=.2, use_scan_field=True)
+    async def RAW_STREAM(self, instance, async_lib):
+        if self.SIM_BEAM_RATE.value > 0.0:
+            raw = next(self.data_iterator)
+            ret = [int(val)*self.DATA_GAIN.value for val in raw]
+        else: # Bad beam rate
+            ret = [random.random() * 100 for i in range(4096)]
+        await instance.write(ret)
+    
+    STREAM = pvproperty(value=[0.0]*4096, record='waveform')
+
+    @STREAM.scan(period=.2, use_scan_field=True)
+    async def STREAM(self, instance, async_lib):
+        # In reality the signal will be attenuated prior to hitting the ADC,
+        # so get our fake attenuated signal before applying signal processing
+        # algorithms
+        raw = self.RAW_STREAM.value
+        att1 = att_strings.index(self.AMP_PREATTN1.value)
+        att2 = att_strings.index(self.AMP_POSATTN1.value)
+        sig = calc_attn_signal(raw, att1, att2)
+        ### Peak Sharpening
+        if bi_strings.index(self.ENABLE_PEAK_SHARPEN.value):
+            sig = PeakSharpen(sig, self.SHARPEN_K2.value)
+        ### Automated attenuation control
+        ret = [val if val < 2**15 else 2**15 for val in sig]
+        await instance.write(ret)
+
     N_PLATEAU = pvproperty(value=3, record='longin')
 
     PLATEAU_DETECTED = pvproperty(value=0, record='bo')
@@ -83,41 +122,12 @@ class GmdSimIoc(PVGroup):
         else:
             await instance.write(0)
 
-    AMP_PREATTN1 = pvproperty(value=att_strings[15],
-                              enum_strings=att_strings,
-                              record='mbbi',
-                              dtype=ChannelType.ENUM)
-
-    AMP_POSATTN1 = pvproperty(value=att_strings[15],
-                              enum_strings=att_strings,
-                              record='mbbi',
-                              dtype=ChannelType.ENUM)
-
-    ATT_CTL_METHOD = pvproperty(value=att_ctl_strings[0],
-                                 enum_strings=att_ctl_strings,
-                                 record='mbbi',
-                                 dtype=ChannelType.ENUM) 
-
-    ENABLE_ATT_CONTROL = pvproperty(value=bi_strings[0],
-                                    enum_strings=bi_strings,
-                                    record='bi',
-                                    dtype=ChannelType.ENUM)
-
-    PEAK_CHECK_METHOD = pvproperty(value=peak_check_strings[0],
-                                   enum_strings=peak_check_strings,
-                                   record='mbbi',
-                                   dtype=ChannelType.ENUM) 
-
     ENABLE_PEAK_SHARPEN = pvproperty(value=bi_strings[0],
                                      enum_strings=bi_strings,
                                      record='bi',
                                      dtype=ChannelType.ENUM)
 
     SHARPEN_K2 = pvproperty(value=5.0, record='ai')
-
-    SHARPEN_K4 = pvproperty(value=434, record='ai')
-
-    RAW_STREAM = pvproperty(value=[0.0]*4096, record='waveform')
 
     SIG_TOO_HIGH = pvproperty(value=0, record='bo')
 
@@ -139,17 +149,31 @@ class GmdSimIoc(PVGroup):
         else:
             await instance.write(0)
 
-    @RAW_STREAM.scan(period=.2, use_scan_field=True)
-    async def RAW_STREAM(self, instance, async_lib):
-        if self.SIM_BEAM_RATE.value > 0.0:
-            raw = next(self.data_iterator)
-            ret = [int(val)*self.DATA_GAIN.value for val in raw]
-        else: # Bad beam rate
-            ret = [random.random() * 100 for i in range(4096)]
-        await instance.write(ret)
-    
+
+class GmdSimIoc(GmdSimIocBase):
+    """
+    IOC for simulating the GMD ion/electron currents. Reads in arrays of 
+    previously taken data and loops through them. Based on settings various
+    algorithms can be applied to the data and/or the attenuators.
+    """
+    ATT_CTL_METHOD = pvproperty(value=att_ctl_strings[0],
+                                 enum_strings=att_ctl_strings,
+                                 record='mbbi',
+                                 dtype=ChannelType.ENUM) 
+
+    ENABLE_ATT_CONTROL = pvproperty(value=bi_strings[0],
+                                    enum_strings=bi_strings,
+                                    record='bi',
+                                    dtype=ChannelType.ENUM)
+
+    PEAK_CHECK_METHOD = pvproperty(value=peak_check_strings[0],
+                                   enum_strings=peak_check_strings,
+                                   record='mbbi',
+                                   dtype=ChannelType.ENUM) 
+
     STREAM = pvproperty(value=[0.0]*4096, record='waveform')
 
+    # Re-write the STREAM PV to include attenuation manipulation
     @STREAM.scan(period=.2, use_scan_field=True)
     async def STREAM(self, instance, async_lib):
         # In reality the signal will be attenuated prior to hitting the ADC,
@@ -201,8 +225,13 @@ if __name__ == '__main__':
     parser.add_argument('--datafile',
                         help='The .csv file the data is stored in',
                         required=True, type=str)
+    parser.add_argument('--simple',
+                        help='Run a simple IOC without attenuation control',
+                        required=False, type=int)
     args = parser.parse_args()
     ioc_options, run_options = split_args(args)
-    ioc = GmdSimIoc(datafile=args.datafile, **ioc_options)
-    ioc = GmdSimIoc(datafile=args.datafile, **ioc_options)
+    if args.simple:
+        ioc = GmdSimIocBase(datafile=args.datafile, **ioc_options)
+    else:
+        ioc = GmdSimIoc(datafile=args.datafile, **ioc_options)
     run(ioc.pvdb, **run_options)
