@@ -17,6 +17,12 @@ Once you have the proper environment you can run the IOC and supply a data file.
 ./gmdSimIoc.py --datafile good_xgmd_electron.csv
 ```
 
+You can use the IOC without the automated attenuation control PVs. This can be useful when testing external algorithms on the IOC; in this case the simulation IOC primarily provides the data PVs. This can be done by adding the flag 
+```--simple 1``` to the command:
+```bash
+./gmdSimIoc.py --datafile good_xgmd_electron.csv --simple 1
+```
+
 ### Using the IOC
 You can see all of the available PVs by adding --list-pvs to the above start command:
 ```bash
